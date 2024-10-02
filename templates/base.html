@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ResuMate{% endblock %}</title>
+    {% load tailwind_tags %}
+    {% tailwind_css %}
+</head>
+<body class="font-sans">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center h-16">
+                <div class="flex space-x-8 items-center">
+                    {% url 'home' as home_url %}
+                    {% url 'templates' as templates_url %}
+                    {% url 'builder' as builder_url %}
+                    {% url 'about' as about_url %}
+                    {% url 'contact' as contact_url %}
+                    {% url 'account' as account_url %}
+
+                    <a href="{{ home_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">Home.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == home_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                    <a href="{{ templates_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">Templates.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == templates_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                    <a href="{{ builder_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">Builder.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == builder_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                    <a href="{{ home_url }}" class="px-3 py-2 text-sm font-medium font-bold text-black hover:text-gray-600">Resu-Mate.</a>
+                    <a href="{{ about_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">About us.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == about_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                    <a href="{{ contact_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">Contact.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == contact_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                    <a href="{{ account_url }}" class="relative group px-3 py-2 text-sm font-medium">
+                        <span class="text-black group-hover:text-gray-600">Account.</span>
+                        <span class="absolute bottom-0 left-3 w-1/4 h-0.5 bg-black transition-all duration-200 ease-in-out {% if request.path == account_url %}opacity-100{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-200 text-center p-4 mt-8">
+        <p>&copy; 2024 ResuMate. All rights reserved.</p>
+    </footer>
+</body>
+</html>
