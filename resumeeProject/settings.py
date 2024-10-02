@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-gzr$a26bhng&r)wg*820ivh1^7wmb==-spxx%cux1%qa0ig*cs
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['your-username.pythonanywhere.com']
+
 
 TAILWIND_APP_NAME = 'theme' 
 
