@@ -1,0 +1,54 @@
+<!-- templates/template_3.html -->
+<div class="resume-template {{ selected_color }}">
+    <!-- Personal Information in Sidebar -->
+    <div class="flex">
+        <div class="w-1/4 bg-gray-100 p-4">
+            <h1 class="text-2xl font-bold mb-2">{{ name }}</h1>
+            <p class="mb-2">{{ address }}</p>
+            <p class="mb-2">{{ phone }}</p>
+            <p class="mb-2">{{ email }}</p>
+            <!-- Skills -->
+            {% if skills %}
+            <div class="mt-4">
+                <h2 class="text-xl font-bold mb-2">Skills</h2>
+                <ul class="list-disc list-inside">
+                    {% for skill in skills %}
+                    <li>{{ skill.name }} - Level: {{ skill.level }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="w-3/4 pl-6">
+            <!-- Work Experience -->
+            {% if work_experiences %}
+            <div class="mb-4">
+                <h2 class="text-xl font-bold mb-2">Work Experience</h2>
+                {% for work in work_experiences %}
+                <div class="mb-2">
+                    <h3 class="text-lg font-semibold">{{ work.function }} at {{ work.company }}</h3>
+                    <p class="text-sm">{{ work.startDate }} - {{ work.endDate }}</p>
+                    <p>{{ work.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if educations %}
+            <div class="mb-4">
+                <h2 class="text-xl font-bold mb-2">Education</h2>
+                {% for edu in educations %}
+                <div class="mb-2">
+                    <h3 class="text-lg font-semibold">{{ edu.education }} at {{ edu.institution }}</h3>
+                    <p class="text-sm">{{ edu.startDate }} - {{ edu.endDate }}</p>
+                    <p>{{ edu.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

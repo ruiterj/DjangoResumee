@@ -1,8 +1,138 @@
 {% extends 'base.html' %}
 
-{% block title %}Welcome to ResuMate{% endblock %}
+{% block title %}Choose Your Resume Template{% endblock %}
 
 {% block content %}
 <div class="bg-white">
+    <div class="container mx-auto mt-12">
+        <h1 class="text-4xl font-bold text-center mb-8">Choose Your Resume Template</h1>
+
+        <!-- Slider Section -->
+        <div class="relative w-full max-w-md mx-auto">
+            <!-- Slider Container -->
+            <div id="template-slider" class="overflow-hidden">
+                <div class="flex transition-transform duration-500" id="slider-content" style="transform: translateX(0);">
+                    <!-- Template 1 -->
+                    <div class="template w-full flex-shrink-0 flex flex-col items-center" data-template="1">
+                        <div class="template-preview w-64 h-96 border border-black rounded mb-4 flex items-center justify-center">
+                            <span class="text-xl font-semibold" id="template-text-1">Template 1</span>
+                        </div>
+                    </div>
+                    <!-- Template 2 -->
+                    <div class="template w-full flex-shrink-0 flex flex-col items-center" data-template="2">
+                        <div class="template-preview w-64 h-96 border border-black rounded mb-4 flex items-center justify-center">
+                            <span class="text-xl font-semibold" id="template-text-2">Template 2</span>
+                        </div>
+                    </div>
+                    <!-- Template 3 -->
+                    <div class="template w-full flex-shrink-0 flex flex-col items-center" data-template="3">
+                        <div class="template-preview w-64 h-96 border border-black rounded mb-4 flex items-center justify-center">
+                            <span class="text-xl font-semibold" id="template-text-3">Template 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Navigation Buttons -->
+            <button id="prev-button" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white px-2 py-1 rounded-full">‹</button>
+            <button id="next-button" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white px-2 py-1 rounded-full">›</button>
+        </div>
+
+        <!-- Select Template Button -->
+        <div class="text-center mt-4">
+            <button id="select-template-btn" class="bg-black text-white px-4 py-2 rounded">Select This Template</button>
+        </div>
+
+        <!-- Color Selection Section -->
+        <div class="mt-12 text-center">
+            <h2 class="text-2xl font-bold mb-4">Choose a Color Theme</h2>
+            <div class="flex justify-center space-x-4">
+                <!-- Black -->
+                <div class="color-option w-10 h-10 rounded-full bg-black cursor-pointer border-2 border-black" data-color="black"></div>
+                <!-- Blue -->
+                <div class="color-option w-10 h-10 rounded-full bg-blue-500 cursor-pointer border-2 border-black" data-color="text-blue-500"></div>
+                <!-- Red -->
+                <div class="color-option w-10 h-10 rounded-full bg-red-500 cursor-pointer border-2 border-black" data-color="text-red-500"></div>
+                <!-- Green -->
+                <div class="color-option w-10 h-10 rounded-full bg-green-500 cursor-pointer border-2 border-black" data-color="text-green-500"></div>
+                <!-- Yellow -->
+                <div class="color-option w-10 h-10 rounded-full bg-yellow-500 cursor-pointer border-2 border-black" data-color="text-yellow-500"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle slider, template selection, and color change -->
+    <script>
+        // Slider functionality
+        let currentIndex = 0;
+        const sliderContent = document.getElementById('slider-content');
+        const templates = document.querySelectorAll('.template');
+        const totalTemplates = templates.length;
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const selectTemplateBtn = document.getElementById('select-template-btn');
+        let selectedTemplate = 1; // Default to first template
+        let selectedColor = 'black'; // Default color
+
+        function updateSliderPosition() {
+            sliderContent.style.transform = `translateX(-${currentIndex * 100}%)`;
+            selectedTemplate = templates[currentIndex].getAttribute('data-template');
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSliderPosition();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < totalTemplates - 1) {
+                currentIndex++;
+                updateSliderPosition();
+            }
+        });
+
+        // Handle template selection
+        selectTemplateBtn.addEventListener('click', () => {
+            // Send selectedTemplate and selectedColor to the server via AJAX
+            fetch("{% url 'set_template_color' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    'selected_template': selectedTemplate,
+                    'selected_color': selectedColor,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{% url 'builder' %}";
+                } else {
+                    alert('An error occurred.');
+                }
+            });
+        });
+
+        // Handle color selection
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const colorClass = option.getAttribute('data-color');
+                selectedColor = colorClass;
+                // Change the text color of the visible template
+                templates.forEach((template, index) => {
+                    const textSpan = template.querySelector(`#template-text-${index + 1}`);
+                    if (index === currentIndex) {
+                        textSpan.className = `text-xl font-semibold ${colorClass}`;
+                    } else {
+                        textSpan.className = 'text-xl font-semibold text-black';
+                    }
+                });
+            });
+        });
+    </script>
 </div>
 {% endblock %}

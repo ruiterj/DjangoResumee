@@ -1,8 +1,498 @@
+<!-- templates/builder.html -->
 {% extends 'base.html' %}
 
-{% block title %}Welcome to ResuMate{% endblock %}
+{% block title %}Resume Builder{% endblock %}
 
 {% block content %}
-<div class="bg-white">
+<div class="bg-white flex">
+    <!-- Parent Container -->
+    <div class="w-1/2 p-4 mx-auto mt-20">
+        <form method="post" id="resume-form">
+            {% csrf_token %}
+            <!-- Flex Row for Personal Information and Skills -->
+            <div class="flex flex-row space-x-4 mb-4">
+                <!-- Personal Information (Half Width) -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4 border-b-2 border-black pb-2">
+                        Personal Information
+                    </h3>
+                    <div id="personal-info-form" class="space-y-4">
+                        <!-- Name -->
+                        <div>
+                            <label for="name" class="block font-medium text-black mb-1">
+                                Name
+                            </label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring focus:ring-black"
+                                required>
+                        </div>
+                        <!-- Address -->
+                        <div>
+                            <label for="address" class="block font-medium text-black mb-1">
+                                Address
+                            </label>
+                            <input type="text" id="address" name="address"
+                                class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring focus:ring-black"
+                                required>
+                        </div>
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="phone" class="block font-medium text-black mb-1">
+                                Phone Number
+                            </label>
+                            <input type="tel" id="phone" name="phone"
+                                class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring focus:ring-black"
+                                required>
+                        </div>
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block font-medium text-black mb-1">
+                                Email
+                            </label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring focus:ring-black"
+                                required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills (Half Width) -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4 border-b-2 border-black pb-2">
+                        Skills
+                    </h3>
+
+                    <div id="skill-form" class="space-y-4">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                            <input type="text" id="skill-name"
+                                class="border border-black p-2 w-full" placeholder="Skill name">
+                            <input type="number" id="skill-level"
+                                class="border border-black p-2 w-16" placeholder="1-5" min="1" max="5">
+                            <button type="button" id="add-skill-btn"
+                                class="bg-black text-white px-4 py-2 rounded">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Skills List -->
+                    <ul id="skills-list" class="list-disc list-inside mt-4 space-y-2">
+                        <!-- Dynamic Skills will be appended here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Work Experience (Full Width) -->
+            <div class="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
+                <h3 class="font-bold text-xl mb-4 border-b-2 border-black pb-2">
+                    Work Experience
+                </h3>
+
+                <div class="space-y-4">
+                    <!-- Function -->
+                    <div>
+                        <label for="function" class="block font-medium text-black mb-2">
+                            Function
+                        </label>
+                        <input type="text" id="function" class="border border-black p-2 w-full"
+                            placeholder="e.g. Software Engineer">
+                    </div>
+
+                    <!-- Company Name -->
+                    <div>
+                        <label for="company-name" class="block font-medium text-black mb-2">
+                            Company Name
+                        </label>
+                        <input type="text" id="company-name" class="border border-black p-2 w-full"
+                            placeholder="e.g. ASML">
+                    </div>
+
+                    <!-- Start Date and End Date in one row -->
+                    <div class="flex space-x-4">
+                        <!-- Start Date -->
+                        <div class="w-1/2">
+                            <label for="start-date-work" class="block font-medium text-black mb-2">
+                                Start Date
+                            </label>
+                            <input type="date" id="start-date-work"
+                                class="border border-black p-2 w-full">
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="w-1/2">
+                            <label for="end-date-work" class="block font-medium text-black mb-2">
+                                End Date
+                            </label>
+                            <input type="date" id="end-date-work"
+                                class="border border-black p-2 w-full">
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="workDescription" class="block font-medium text-black mb-2">
+                            Description
+                        </label>
+                        <textarea id="workDescription" class="border border-black p-2 w-full"
+                            rows="4" placeholder="Brief Description"></textarea>
+                    </div>
+
+                    <!-- Add Work Experience Button -->
+                    <div>
+                        <button type="button" id="add-work-btn"
+                            class="bg-black text-white px-4 py-2 rounded">Add Work Experience</button>
+                    </div>
+                </div>
+
+                <!-- Work Experience List -->
+                <ul id="work-experience-list" class="mt-4 space-y-4">
+                    <!-- Dynamic Work Experience entries will be appended here -->
+                </ul>
+            </div>
+
+            <!-- Education (Full Width) -->
+            <div class="w-full bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="font-bold text-xl mb-4 border-b-2 border-black pb-2">
+                    Education
+                </h3>
+                <div class="space-y-4">
+                    <!-- Education -->
+                    <div>
+                        <label for="education" class="block font-medium text-black mb-2">
+                            Education
+                        </label>
+                        <input type="text" id="education" class="border border-black p-2 w-full"
+                            placeholder="e.g. Computer Science">
+                    </div>
+
+                    <!-- Institution -->
+                    <div>
+                        <label for="institution" class="block font-medium text-black mb-2">
+                            Institution
+                        </label>
+                        <input type="text" id="institution" class="border border-black p-2 w-full"
+                            placeholder="e.g. Harvard">
+                    </div>
+
+                    <!-- Start Date and End Date in one row -->
+                    <div class="flex space-x-4">
+                        <!-- Start Date -->
+                        <div class="w-1/2">
+                            <label for="start-date-edu" class="block font-medium text-black mb-2">
+                                Start Date
+                            </label>
+                            <input type="date" id="start-date-edu"
+                                class="border border-black p-2 w-full">
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="w-1/2">
+                            <label for="end-date-edu" class="block font-medium text-black mb-2">
+                                End Date
+                            </label>
+                            <input type="date" id="end-date-edu"
+                                class="border border-black p-2 w-full">
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="eduDescription" class="block font-medium text-black mb-2">
+                            Description
+                        </label>
+                        <textarea id="eduDescription" class="border border-black p-2 w-full"
+                            rows="4" placeholder="Brief Description"></textarea>
+                    </div>
+
+                    <!-- Add Education Button -->
+                    <div>
+                        <button type="button" id="add-education-btn"
+                            class="bg-black text-white px-4 py-2 rounded">Add Education</button>
+                    </div>
+                </div>
+
+                <!-- Education List -->
+                <ul id="education-list" class="mt-4 space-y-4">
+                    <!-- Dynamic Education entries will be appended here -->
+                </ul>
+            </div>
+
+            <!-- Hidden Inputs to Store JSON Data -->
+            <input type="hidden" name="skills" id="skills-input">
+            <input type="hidden" name="work_experiences" id="work-experiences-input">
+            <input type="hidden" name="educations" id="educations-input">
+
+            <!-- Submit Button -->
+            <div class="text-center mt-4">
+                <button type="submit" class="bg-black text-white px-4 py-2 rounded">
+                    Save Resume
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resume Preview -->
+    <div class="w-1/2 flex items-start justify-center mt-20 p-8">
+        <div class="bg-white w-full max-w-lg aspect-[210/297] shadow-lg sticky top-4 p-8 overflow-y-auto">
+            <div id="resume" class="text-black">
+                <!-- The resume preview will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+    // Personal Information
+    const nameInput = document.getElementById('name');
+    const addressInput = document.getElementById('address');
+    const phoneInput = document.getElementById('phone');
+    const emailInput = document.getElementById('email');
+
+    // Skills
+    const skillNameInput = document.getElementById('skill-name');
+    const skillLevelInput = document.getElementById('skill-level');
+    const addSkillBtn = document.getElementById('add-skill-btn');
+    const skillsList = document.getElementById('skills-list');
+    let skills = [];
+
+    // Work Experience
+    const addWorkBtn = document.getElementById('add-work-btn');
+    const workExperienceList = document.getElementById('work-experience-list');
+    let workExperiences = [];
+
+    // Education
+    const addEducationBtn = document.getElementById('add-education-btn');
+    const educationList = document.getElementById('education-list');
+    let educations = [];
+
+    // Hidden Inputs
+    const skillsInput = document.getElementById('skills-input');
+    const workExperiencesInput = document.getElementById('work-experiences-input');
+    const educationsInput = document.getElementById('educations-input');
+
+    // Resume
+    const resumeDiv = document.getElementById('resume');
+
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrfToken = getCookie('csrftoken');
+
+    // Update Resume Function
+    function updateResume() {
+        // Update hidden inputs with JSON data
+        skillsInput.value = JSON.stringify(skills);
+        workExperiencesInput.value = JSON.stringify(workExperiences);
+        educationsInput.value = JSON.stringify(educations);
+
+        // Prepare data to send
+        const formData = new FormData();
+        formData.append('name', nameInput.value);
+        formData.append('address', addressInput.value);
+        formData.append('phone', phoneInput.value);
+        formData.append('email', emailInput.value);
+        formData.append('skills', skillsInput.value);
+        formData.append('work_experiences', workExperiencesInput.value);
+        formData.append('educations', educationsInput.value);
+
+        // Fetch the rendered template
+        fetch("{% url 'render_resume_preview' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+            body: formData,
+        })
+        .then(response => response.text())
+        .then(html => {
+            resumeDiv.innerHTML = html;
+        });
+    }
+
+    // Update Resume when Personal Info changes
+    [nameInput, addressInput, phoneInput, emailInput].forEach(input => {
+        input.addEventListener('input', updateResume);
+    });
+
+    // Add Skill
+    function addSkill() {
+        const skillName = skillNameInput.value.trim();
+        const skillLevel = skillLevelInput.value.trim();
+
+        if (skillName && skillLevel) {
+            const skill = { name: skillName, level: skillLevel };
+            skills.push(skill);
+
+            // Create new list item
+            const li = document.createElement('li');
+            li.classList.add('flex', 'justify-between', 'items-center', 'border', 'border-black', 'p-2', 'rounded-lg');
+
+            // Skill details
+            const skillDetails = document.createElement('div');
+            skillDetails.classList.add('flex', 'w-full', 'justify-between', 'pr-4');
+
+            const skillNameSpan = document.createElement('span');
+            skillNameSpan.innerText = skillName;
+            const skillLevelSpan = document.createElement('span');
+            skillLevelSpan.innerText = `Level: ${skillLevel}`;
+
+            skillDetails.appendChild(skillNameSpan);
+            skillDetails.appendChild(skillLevelSpan);
+
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.innerText = 'Remove';
+            removeBtn.classList.add('bg-red-500', 'text-white', 'px-3', 'py-1', 'rounded', 'hover:bg-red-700', 'focus:outline-none', 'ml-4');
+            removeBtn.onclick = () => {
+                skillsList.removeChild(li);
+                skills = skills.filter(s => s !== skill);
+                updateResume();
+            };
+
+            li.appendChild(skillDetails);
+            li.appendChild(removeBtn);
+            skillsList.appendChild(li);
+
+            // Clear inputs
+            skillNameInput.value = '';
+            skillLevelInput.value = '';
+
+            updateResume();
+        }
+    }
+
+    addSkillBtn.addEventListener('click', addSkill);
+
+    // Add Work Experience
+    function addWorkExperience() {
+        const functionInput = document.getElementById('function');
+        const companyNameInput = document.getElementById('company-name');
+        const startDateInput = document.getElementById('start-date-work');
+        const endDateInput = document.getElementById('end-date-work');
+        const descriptionInput = document.getElementById('workDescription');
+
+        const work = {
+            function: functionInput.value.trim(),
+            company: companyNameInput.value.trim(),
+            startDate: startDateInput.value,
+            endDate: endDateInput.value,
+            description: descriptionInput.value.trim()
+        };
+
+        if (work.function && work.company && work.startDate && work.endDate) {
+            workExperiences.push(work);
+
+            // Create list item
+            const li = document.createElement('li');
+            li.classList.add('border', 'border-black', 'p-4', 'rounded-lg');
+
+            const workDetails = document.createElement('div');
+            workDetails.innerHTML = `
+                <h3 class="text-lg font-semibold">${work.function} at ${work.company}</h3>
+                <p class="text-sm">${work.startDate} - ${work.endDate}</p>
+                <p>${work.description}</p>
+            `;
+
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.innerText = 'Remove';
+            removeBtn.classList.add('mt-2', 'bg-red-500', 'text-white', 'px-3', 'py-1', 'rounded', 'hover:bg-red-700', 'focus:outline-none');
+            removeBtn.onclick = () => {
+                workExperienceList.removeChild(li);
+                workExperiences = workExperiences.filter(w => w !== work);
+                updateResume();
+            };
+
+            li.appendChild(workDetails);
+            li.appendChild(removeBtn);
+            workExperienceList.appendChild(li);
+
+            // Clear inputs
+            functionInput.value = '';
+            companyNameInput.value = '';
+            startDateInput.value = '';
+            endDateInput.value = '';
+            descriptionInput.value = '';
+
+            updateResume();
+        } else {
+            alert('Please fill in all required fields.');
+        }
+    }
+
+    addWorkBtn.addEventListener('click', addWorkExperience);
+
+    // Add Education
+    function addEducation() {
+        const educationInput = document.getElementById('education');
+        const institutionInput = document.getElementById('institution');
+        const startDateEduInput = document.getElementById('start-date-edu');
+        const endDateEduInput = document.getElementById('end-date-edu');
+        const eduDescriptionInput = document.getElementById('eduDescription');
+
+        const edu = {
+            education: educationInput.value.trim(),
+            institution: institutionInput.value.trim(),
+            startDate: startDateEduInput.value,
+            endDate: endDateEduInput.value,
+            description: eduDescriptionInput.value.trim()
+        };
+
+        if (edu.education && edu.institution && edu.startDate && edu.endDate) {
+            educations.push(edu);
+
+            // Create list item
+            const li = document.createElement('li');
+            li.classList.add('border', 'border-black', 'p-4', 'rounded-lg');
+
+            const eduDetails = document.createElement('div');
+            eduDetails.innerHTML = `
+                <h3 class="text-lg font-semibold">${edu.education} at ${edu.institution}</h3>
+                <p class="text-sm">${edu.startDate} - ${edu.endDate}</p>
+                <p>${edu.description}</p>
+            `;
+
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.innerText = 'Remove';
+            removeBtn.classList.add('mt-2', 'bg-red-500', 'text-white', 'px-3', 'py-1', 'rounded', 'hover:bg-red-700', 'focus:outline-none');
+            removeBtn.onclick = () => {
+                educationList.removeChild(li);
+                educations = educations.filter(e => e !== edu);
+                updateResume();
+            };
+
+            li.appendChild(eduDetails);
+            li.appendChild(removeBtn);
+            educationList.appendChild(li);
+
+            // Clear inputs
+            educationInput.value = '';
+            institutionInput.value = '';
+            startDateEduInput.value = '';
+            endDateEduInput.value = '';
+            eduDescriptionInput.value = '';
+
+            updateResume();
+        } else {
+            alert('Please fill in all required fields.');
+        }
+    }
+
+    addEducationBtn.addEventListener('click', addEducation);
+
+    // Initial call to update the resume preview
+    updateResume();
+</script>
 {% endblock %}
