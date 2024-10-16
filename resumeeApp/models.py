@@ -5,6 +5,8 @@ class Resume(models.Model):
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
     email = models.EmailField()
+    personal_summary = models.TextField(blank=True, null=True)  # New field
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)  # New field
     skills = models.TextField()
     work_experiences = models.TextField()
     educations = models.TextField()

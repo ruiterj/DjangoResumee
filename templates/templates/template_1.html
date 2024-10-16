@@ -1,21 +1,22 @@
-<!-- templates/template_1.html -->
 <div class="resume-template {{ selected_color }}">
     <!-- Personal Information -->
     <div class="mb-4">
-        <h1 class="text-3xl font-bold">{{ name }}</h1>
-        <p>{{ address }}</p>
-        <p>{{ phone }} | {{ email }}</p>
+        {% if profile_picture_url %}
+        <div class="mb-4">
+            <img src="{{ profile_picture_url }}" alt="Profile Picture"
+                class="w-32 h-32 rounded-full mx-auto object-cover">
+        </div>
+        {% endif %}
+        <h1 class="text-3xl font-bold text-center">{{ name }}</h1>
+        <p class="text-center">{{ address }}</p>
+        <p class="text-center">{{ phone }} | {{ email }}</p>
     </div>
 
-    <!-- Skills -->
-    {% if skills %}
+    <!-- Personal Summary -->
+    {% if personal_summary %}
     <div class="mb-4">
-        <h2 class="text-xl font-bold mb-2">Skills</h2>
-        <ul class="list-disc list-inside">
-            {% for skill in skills %}
-            <li>{{ skill.name }} - Level: {{ skill.level }}</li>
-            {% endfor %}
-        </ul>
+        <h2 class="text-xl font-bold mb-2">Summary</h2>
+        <p>{{ personal_summary }}</p>
     </div>
     {% endif %}
 
