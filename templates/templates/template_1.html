@@ -1,4 +1,6 @@
 <div class="resume-template {{ selected_color }}">
+
+
     <!-- Personal Information -->
     <div class="mb-4">
         {% if profile_picture_url %}
@@ -15,7 +17,7 @@
     <!-- Personal Summary -->
     {% if personal_summary %}
     <div class="mb-4">
-        <h2 class="text-xl font-bold mb-2">Summary</h2>
+        <h2 class="text-xl font-bold mb-2">About me</h2>
         <p>{{ personal_summary }}</p>
     </div>
     {% endif %}
@@ -47,4 +49,13 @@
         {% endfor %}
     </div>
     {% endif %}
+</div>
+
+
+
+
+
+<div>
+    <img src="{{ profile_picture_url }}" alt="Profile Picture"
+        class="w-32 h-32 rounded-full mx-auto object-cover">
 </div>
